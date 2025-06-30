@@ -1,0 +1,36 @@
+From 7459e553ab91992c6e697370ffb2e986d0c7419f Mon Sep 17 00:00:00 2001
+From: janiopi <janio072003@hotmail.com>
+Date: Sat, 28 Jun 2025 23:37:44 -0500
+Subject: [PATCH 1/3] update[#13]: Actualizar worfklows.yaml
+
+---
+ docs/workflows.yaml | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/docs/workflows.yaml b/docs/workflows.yaml
+index 02e7066..fd955c5 100644
+--- a/docs/workflows.yaml
++++ b/docs/workflows.yaml
+@@ -2,13 +2,17 @@ workflows:
+   - id: process_file
+     event: file_created
+     path: /app/data
++    action_type: script
+     action: /app/scripts/process_data.sh <file>
++    recursive: false
+   - id: notify_message
+     event: message_received
+     queue: redis://redis:6379/0
++    action_type: script
+     action: python /app/src/notify.py
+   - id: k8s_nginx
+-    event: k8s_deploy
++    event: file_created
++    path: /app/data/k8s 
++    action_type: kubernetes
+     manifest: /app/k8s/nginx-deployment.yaml
+-    action: python /app/src/k8s_deploy.py <manifest>
+     depends_on: ['process_file']
+-- 
+2.34.1
+
