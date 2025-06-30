@@ -1,0 +1,71 @@
+From 8f4db6cef6e306e12c7f588479178e0719385892 Mon Sep 17 00:00:00 2001
+From: janiopi <janio072003@hotmail.com>
+Date: Sun, 22 Jun 2025 22:26:07 -0500
+Subject: [PATCH 1/3] update[#3]: Actualizar requirements.txt
+
+---
+ requirements.txt        | 12 ++++++++++++
+ scripts/process_data.sh | 12 ++++++------
+ 2 files changed, 18 insertions(+), 6 deletions(-)
+
+diff --git a/requirements.txt b/requirements.txt
+index 81502c9..bd060e8 100644
+--- a/requirements.txt
++++ b/requirements.txt
+@@ -1,12 +1,24 @@
++async-timeout==5.0.1
++black==25.1.0
++click==8.2.1
+ colorama==0.4.6
+ coverage==7.9.1
++exceptiongroup==1.3.0
+ flake8==7.3.0
+ iniconfig==2.1.0
+ mccabe==0.7.0
++mypy_extensions==1.1.0
+ packaging==25.0
++pathspec==0.12.1
++platformdirs==4.3.8
+ pluggy==1.6.0
+ pycodestyle==2.14.0
+ pyflakes==3.4.0
+ Pygments==2.19.2
+ pytest==8.4.1
+ pytest-cov==6.2.1
++PyYAML==6.0.2
++redis==6.2.0
++tomli==2.2.1
++typing_extensions==4.14.0
++watchdog==6.0.0
+diff --git a/scripts/process_data.sh b/scripts/process_data.sh
+index 9bb50ff..974a8c8 100644
+--- a/scripts/process_data.sh
++++ b/scripts/process_data.sh
+@@ -1,16 +1,16 @@
+ #!/bin/bash
+ set -e
+-echo "DEBUG: Script started with args: $@" >> /app/reports/process_data_debug.log
++echo "DEBUG: Script inicializa con argumento: $@" >> /app/reports/process_data_debug.log
+ if [ $# -ne 1 ]; then
+-    echo "ERROR: Exactly one file argument required" >> /app/reports/process_data_debug.log
++    echo "ERROR: Se requiere solo un argumento " >> /app/reports/process_data_debug.log
+     exit 1
+ fi
+ FILE="$1"
+-echo "DEBUG: Processing file: $FILE" >> /app/reports/process_data_debug.log
++echo "DEBUG: Procesando: $FILE" >> /app/reports/process_data_debug.log
+ if [ ! -f "$FILE" ]; then
+-    echo "ERROR: File $FILE does not exist" >> /app/reports/process_data_debug.log
++    echo "ERROR:  $FILE no existe" >> /app/reports/process_data_debug.log
+     exit 1
+ fi
+-echo "$(date -u +'%Y-%m-%d %H:%M:%S') - Processing file: $FILE" >> /app/reports/processed_files.log
++echo "$(date -u +'%Y-%m-%d %H:%M:%S') - Procesando: $FILE" >> /app/reports/processed_files.log
+ cat "$FILE" >> /app/reports/processed_files.log
+-echo "DEBUG: File processed successfully" >> /app/reports/process_data_debug.log
+\ No newline at end of file
++echo "DEBUG: Proceso exitoso" >> /app/reports/process_data_debug.log
+\ No newline at end of file
+-- 
+2.34.1
+

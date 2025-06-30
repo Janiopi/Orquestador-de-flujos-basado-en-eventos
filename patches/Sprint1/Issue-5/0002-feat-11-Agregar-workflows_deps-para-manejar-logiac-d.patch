@@ -1,0 +1,70 @@
+From 45523072a3e0a307ff374ab4c96b402caa7e009b Mon Sep 17 00:00:00 2001
+From: janiopi <janio072003@hotmail.com>
+Date: Fri, 27 Jun 2025 16:09:14 -0500
+Subject: [PATCH 2/2] feat[#11]: Agregar workflows_deps para manejar logiac de
+ dependencias
+
+---
+ src/workflow_deps.py | 49 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
+ create mode 100644 src/workflow_deps.py
+
+diff --git a/src/workflow_deps.py b/src/workflow_deps.py
+new file mode 100644
+index 0000000..a529efb
+--- /dev/null
++++ b/src/workflow_deps.py
+@@ -0,0 +1,49 @@
++import json
++import os
++import logging
++
++logging.basicConfig(
++    level=logging.INFO,
++    format="%(asctime)s - %(levelname)s - %(message)s",
++    handlers=[
++        logging.FileHandler("/app/reports/workflow_deps.log"),
++        logging.StreamHandler()
++    ]
++)
++logger = logging.getLogger(__name__)
++
++STATE_FILE = "/app/data/workflow_state.json"
++
++def init_state():
++    if not os.path.exists(STATE_FILE):
++        with open(STATE_FILE, 'w') as f:
++            json.dump({}, f)
++
++def update_workflow_state(workflow_id, status):
++    init_state()
++    try:
++        with open(STATE_FILE, 'r') as f:
++            state = json.load(f)
++        state[workflow_id] = status
++        with open(STATE_FILE, 'w') as f:
++            json.dump(state, f)
++        logger.info(f"Estado actualizado: {workflow_id} -> {status}")
++    except Exception as e:
++        logger.error(f"Error actualizando estado: {e}")
++
++def check_dependencies(workflow):
++    init_state()
++    depends_on = workflow.get("depends_on", [])
++    if not depends_on:
++        return True
++    try:
++        with open(STATE_FILE, 'r') as f:
++            state = json.load(f)
++        for dep_id in depends_on:
++            if state.get(dep_id) != "success":
++                logger.warning(f"Dependencia {dep_id} no completada")
++                return False
++        return True
++    except Exception as e:
++        logger.error(f"Error verificando dependencias: {e}")
++        return False
+\ No newline at end of file
+-- 
+2.34.1
+
