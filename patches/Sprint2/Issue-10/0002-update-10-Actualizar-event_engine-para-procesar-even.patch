@@ -1,0 +1,55 @@
+From a4d20f93aa7c5317b8ed165613c6e08e0a8ca1d0 Mon Sep 17 00:00:00 2001
+From: janiopi <janio072003@hotmail.com>
+Date: Fri, 27 Jun 2025 15:53:18 -0500
+Subject: [PATCH 2/3] update[#10]: Actualizar event_engine para procesar
+ eventos k8s_deploy
+
+---
+ src/event_engine.py | 24 ++++++++++++++++++++----
+ 1 file changed, 20 insertions(+), 4 deletions(-)
+
+diff --git a/src/event_engine.py b/src/event_engine.py
+index 8190870..0a589c3 100644
+--- a/src/event_engine.py
++++ b/src/event_engine.py
+@@ -33,9 +33,25 @@ class FileEventHandler(watchdog.events.FileSystemEventHandler):
+                 if wf["event"] == "file_created" and event.src_path.startswith(
+                     wf["path"]
+                 ):
+-                    action = wf["action"].replace("<file>", event.src_path)
+-                    logger.info(f"Ejecutando accion: {action}")
+-                    os.system(action)
++                    if check_dependencies(wf):
++                        action = wf["action"].replace("<file>", event.src_path)
++                        logger.info(f"Ejecutando acción: {action}")
++                        exit_code = os.system(action)
++                        workflow_id = wf.get("id", "")
++                        status = "success" if exit_code == 0 else "failed"
++                        update_workflow_state(workflow_id, status)
++                    else:
++                        logger.warning(f"Dependencias no cumplidas para workflow {wf.get('id', '')}")
++                elif wf["event"] == "k8s_deploy" and event.src_path.startswith(wf.get("path", "")):
++                    if check_dependencies(wf):
++                        action = wf["action"].replace("<manifest>", wf["manifest"])
++                        logger.info(f"Ejecutando acción: {action}")
++                        exit_code = os.system(action)
++                        workflow_id = wf.get("id", "")
++                        status = "success" if exit_code == 0 else "failed"
++                        update_workflow_state(workflow_id, status)
++                    else:
++                        logger.warning(f"Dependencias no cumplidas para workflow {wf.get('id', '')}")
+ 
+ 
+ # Carga la configuracion de workflows desde un YAML
+@@ -70,7 +86,7 @@ def listen_redis(queue, workflows):
+         exit(1)
+ 
+ 
+-if __name__ == "__main__": # pragma: no cover
++if __name__ == "__main__":
+     data_dir = "/app/data"
+     config_path = "/app/docs/workflows.yaml"
+     if not os.path.exists(data_dir):
+-- 
+2.34.1
+

@@ -1,0 +1,28 @@
+From c34bb4b658f91e2811d2861e0542b7d1e5b2c657 Mon Sep 17 00:00:00 2001
+From: janiopi <janio072003@hotmail.com>
+Date: Fri, 27 Jun 2025 16:07:32 -0500
+Subject: [PATCH 3/3] =?UTF-8?q?update[#10]:=20A=C3=B1adir=20dependencias?=
+ =?UTF-8?q?=20faltantes=20en=20event=20engine?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ src/event_engine.py | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/event_engine.py b/src/event_engine.py
+index 0a589c3..5d37610 100644
+--- a/src/event_engine.py
++++ b/src/event_engine.py
+@@ -6,6 +6,7 @@ import yaml
+ import redis
+ import logging
+ import threading
++from src.workflow_deps import check_dependencies, update_workflow_state
+ 
+ # Configura el sistema para escribir un log en un archivo y en la consola
+ logging.basicConfig(
+-- 
+2.34.1
+

@@ -1,0 +1,25 @@
+From 36597cb358044cb1abee472e04f3b3c7740ce64e Mon Sep 17 00:00:00 2001
+From: janiopi <janio072003@hotmail.com>
+Date: Fri, 27 Jun 2025 16:02:25 -0500
+Subject: [PATCH 1/2] update[#11]: Actualizar workflows.yaml para agregar
+ dependencias
+
+---
+ docs/workflows.yaml | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/docs/workflows.yaml b/docs/workflows.yaml
+index 82bdd1c..18ea0eb 100644
+--- a/docs/workflows.yaml
++++ b/docs/workflows.yaml
+@@ -7,4 +7,5 @@ workflows:
+     action: python /app/src/notify.py
+   - event: k8s_deploy
+     manifest: /app/k8s/<manifest>
+-    action: python /app/src/k8s_deploy.py <manifest>
+\ No newline at end of file
++    action: python /app/src/k8s_deploy.py <manifest>
++    depends_on: ['process_file']
+-- 
+2.34.1
+
